@@ -6,7 +6,7 @@ class YoutubeUtils():
     def __init__(self, youtube_instance):
         self.youtube = youtube_instance
 
-    def get_upcomming_videos_from_ch(self, channel_id: str, max_results: int = 5) -> list:
+    def get_upcoming_videos_from_ch(self, channel_id: str, max_results: int = 5) -> list:
         response = self.youtube.search().list(channelId=channel_id, part='id',
                                               order='date', type='video',
                                               eventType='upcoming',

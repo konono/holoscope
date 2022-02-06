@@ -9,7 +9,7 @@ class Importer(object):
         self.video_ids = self._get_video_ids()
 
     def _get_video_ids(self) -> list:
-        upcomming_videos = []
+        upcoming_videos = []
         for channel_id in self.cnf.youtube.channel_ids:
-            upcomming_videos += self.youtube_utils.get_upcomming_videos_from_ch(channel_id)
-        return upcomming_videos
+            upcoming_videos += self.youtube_utils.get_upcoming_videos_from_ch(channel_id)
+        return upcoming_videos
