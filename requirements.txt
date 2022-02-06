@@ -7,6 +7,8 @@
 
 -i https://pypi.org/simple
 arrow==1.2.2
+boto3==1.20.49
+botocore==1.23.49; python_version >= '3.6'
 cachetools==5.0.0
 certifi==2021.10.8
 charset-normalizer==2.0.11
@@ -21,6 +23,7 @@ google-auth==2.6.0
 googleapis-common-protos==1.54.0
 httplib2==0.20.4
 idna==3.3
+jmespath==0.10.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
 oauthlib==3.2.0
 packaging==21.3; python_version >= '3.6'
 platformdirs==2.4.1; python_version >= '3.7'
@@ -34,9 +37,12 @@ python-dateutil==2.8.2
 requests-oauthlib==1.3.1
 requests==2.27.1
 rsa==4.8
+s3transfer==0.5.1; python_version >= '3.6'
 six==1.16.0
 toml==0.10.2
 tox==3.24.5
 uritemplate==4.1.1
+uritools==4.0.0; python_version ~= '3.7'
+urlextract==1.5.0
 urllib3==1.26.8
-virtualenv==20.13.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+virtualenv==20.13.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
