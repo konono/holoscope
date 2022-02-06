@@ -4,6 +4,8 @@
 import arrow
 
 from dataclasses import dataclass
+from urlextract import URLExtract
+from urllib.parse import urlparse
 from typing import List
 from typing import Optional
 
@@ -58,6 +60,17 @@ class GCalEvent():
     @property
     def calid(self) -> str:
         return self._data['organizer']['email']
+
+    @property
+    def description(self) -> str:
+        return self._data['description']
+
+    @property
+    def video_id(self) -> str:
+        for url in URLExtract().find_urls(self.description):
+            url = urlparse(url)
+            if 'youtube.com' in url.netloc or 'youtu.be' in url.netloc:
+                return url.query.split('=')[1]
 
 
 @dataclass

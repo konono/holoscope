@@ -32,6 +32,7 @@ toml = "*"
 dacite = "*"
 tox = "*"
 boto3 = "*"
+urlextract = "*"
 
 [dev-packages]
 

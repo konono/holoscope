@@ -113,13 +113,14 @@ class Exporter(object):
                     'timeZone': 'Japan'
                 },
             }
-            if (event := [event for event in self.events if title_str == event.title]):
+            if (event := [event for event in self.events if live_event.id == event.video_id]):
                 event = event[0]
-                if live_event.begin.to('Asia/Tokyo') == event.begin:
-                    log.info(f'{live_event.title} is already scheduled.')
-                else:
-                    self._update_event(event.id, live_event)
-                    log.info(f'Update the scheduled time of {live_event.title}.')
+                if title_str == event.title:
+                    if live_event.begin.to('Asia/Tokyo') == event.begin:
+                        log.info(f'{live_event.title} is already scheduled.')
+                        continue
+                self._update_event(event.id, live_event)
+                log.info(f'Update the scheduled time of {live_event.title}.')
             else:
                 if live_event.begin > arrow.utcnow().shift(days=FUTURE):
                     log.info(f'{title_str} was not scheduled, ' +
