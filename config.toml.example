@@ -1,0 +1,20 @@
+[general]
+loglevel = "INFO"
+logdir = "log"
+logfile = "holoscope.log"
+importer_plugin = "config"
+exporter_plugin = "google_calendar"
+
+[google_calendar]
+calendar_id = "YOUR GOOGLE CALENDAR ID"
+
+[youtube]
+api_key = "YOUR YOUTUBE API KEY"
+channel_ids = ['YOUTUBE CHANNEL ID1', 'YOUTUBE CHANNEL ID2', 'YOUTUBE CHANNEL ID3']
+
+[aws]
+access_key_id = 'AWS ACCESS KEY ID'
+secret_access_key = 'AWS SECRET ACCESS KEY'
+dynamodb_table = 'holoscope'
+dynamodb_hash_key_name = 'hashKey'
+kms_key_id = 'AWS KMS KEY ID'
