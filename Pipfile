@@ -35,6 +35,7 @@ boto3 = "*"
 urlextract = "*"
 
 [dev-packages]
+pre-commit = "*"
 
 [requires]
 python_version = "3.9.1"
