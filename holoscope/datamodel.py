@@ -4,10 +4,10 @@
 import arrow
 
 from dataclasses import dataclass
-from urlextract import URLExtract
-from urllib.parse import urlparse
 from typing import List
 from typing import Optional
+from urlextract import URLExtract
+from urllib.parse import urlparse
 
 
 class LiveEvent():

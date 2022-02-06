@@ -4,11 +4,6 @@
 import base64
 import pickle
 
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
 import boto3
 from boto3.dynamodb.conditions import Key
 from boto3.session import Session

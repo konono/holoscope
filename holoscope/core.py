@@ -4,19 +4,12 @@
 import importlib
 import json
 import logging
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from apiclient.discovery import build
 
 from holoscope.config import ConfigLoader
 from holoscope.datamodel import LiveEvent
-from holoscope.exporter_plugin.google_calendar import Exporter
 from holoscope.utils import YoutubeUtils
-
-
 
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
@@ -30,14 +23,12 @@ class Holoscope(object):
     def __init__(self, config):
         self.cnf = config
 
-
     def run(self):
         youtube = build(
             YOUTUBE_API_SERVICE_NAME,
             YOUTUBE_API_VERSION,
             developerKey=self.cnf.youtube.api_key
         )
-
 
         importer_plugin_path = f'{IMPOTER_PLUGIN_DIR}.{self.cnf.general.importer_plugin}'
         exporter_plugin_path = f'{EXPOTER_PLUGIN_DIR}.{self.cnf.general.exporter_plugin}'
