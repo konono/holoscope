@@ -1,0 +1,7 @@
+[flake8]
+exclude =
+    .tox,
+    .venv,
+    __pycache__,
+    terraform,
+max-line-length = 93
