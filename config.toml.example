@@ -2,11 +2,15 @@
 loglevel = "INFO"
 logdir = "log"
 logfile = "holoscope.log"
-importer_plugin = "config"
+importer_plugin = "holodule"
 exporter_plugin = "google_calendar"
 
 [google_calendar]
 calendar_id = "YOUR GOOGLE CALENDAR ID"
+
+[holodule]
+holomenbers = ['猫又おかゆ', 'さくらみこ', '桃鈴ねね'] # 好きなホロメンの正式名称を入れてね！
+holodule_url = 'https://schedule.hololive.tv/simple'
 
 [youtube]
 api_key = "YOUR YOUTUBE API KEY"
