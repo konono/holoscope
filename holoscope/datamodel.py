@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import arrow
+import re
 
 from dataclasses import dataclass
 from typing import List
 from typing import Optional
-from urlextract import URLExtract
 from urllib.parse import urlparse
 
 
@@ -67,7 +67,8 @@ class GCalEvent():
 
     @property
     def video_id(self) -> str:
-        for url in URLExtract().find_urls(self.description):
+        url_pattern = "https?://[\w/:%#\$&\?\(\)~\.=\+\-]+"  # noqa: W605
+        for url in re.findall(url_pattern, self.description):
             url = urlparse(url)
             if 'youtube.com' in url.netloc or 'youtu.be' in url.netloc:
                 return url.query.split('=')[1]
