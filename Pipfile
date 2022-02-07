@@ -32,7 +32,6 @@ toml = "*"
 dacite = "*"
 tox = "*"
 boto3 = "*"
-urlextract = "*"
 beautifulsoup4 = "*"
 
 [dev-packages]
