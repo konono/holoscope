@@ -87,7 +87,7 @@ class GeneralConfiguration:
     loglevel: Optional[str] = None
     logdir: Optional[str] = None
     logfile: Optional[str] = None
-    importer_plugin: Optional[str] = 'config'
+    importer_plugin: Optional[str] = 'holodule'
     exporter_plugin: Optional[str] = 'google_calendar'
 
 
