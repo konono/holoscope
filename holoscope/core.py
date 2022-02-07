@@ -4,6 +4,7 @@
 import importlib
 import json
 import logging
+import socket
 
 from apiclient.discovery import build
 from holoscope.config import ConfigLoader
@@ -16,6 +17,8 @@ IMPOTER_PLUGIN_DIR = "holoscope.importer_plugin"
 EXPOTER_PLUGIN_DIR = "holoscope.exporter_plugin"
 
 log = logging.getLogger(__name__)
+timeout_in_sec = 5
+socket.setdefaulttimeout(timeout_in_sec)
 
 
 class Holoscope(object):

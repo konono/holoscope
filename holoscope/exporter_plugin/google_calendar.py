@@ -6,6 +6,7 @@ import json
 import logging
 import os.path
 import pickle
+import socket
 import textwrap
 
 from ..datamodel import GCalEvent
@@ -18,8 +19,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 log = logging.getLogger(__name__)
+timeout_in_sec = 5
+socket.setdefaulttimeout(timeout_in_sec)
 
 CALENDAR_API_SERVICE_NAME = 'calendar'
 CALENDAR_API_VERSION = 'v3'
