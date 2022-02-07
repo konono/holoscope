@@ -18,7 +18,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+
 log = logging.getLogger(__name__)
+
 CALENDAR_API_SERVICE_NAME = 'calendar'
 CALENDAR_API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -117,18 +119,19 @@ class Exporter(object):
                 event = event[0]
                 if title_str == event.title:
                     if live_event.begin.to('Asia/Tokyo') == event.begin:
-                        log.info(f'{live_event.title} is already scheduled.')
+                        log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                 'is already scheduled.')
                         continue
                 self._update_event(event.id, live_event)
-                log.info(f'Update the scheduled {live_event.title}.')
+                log.info(f'[{live_event.id}]: Update the scheduled {live_event.title}.')
             else:
                 if live_event.begin > arrow.utcnow().shift(days=FUTURE):
-                    log.info(f'{title_str} was not scheduled, ' +
+                    log.info(f'[{live_event.id}]: {title_str} was not scheduled, ' +
                              f'because it is {FUTURE} days away.')
                     continue
                 event = self.calendar.events().insert(calendarId=self.calendar_id,
                                                       body=body).execute()
-                log.info(f'Create {title_str} has been scheduled.')
+                log.info(f'[{live_event.id}]: Create {title_str} has been scheduled.')
 
     def _update_event(self, event_id: str, live_event: LiveEvent):
         title_str = f'{live_event.channel_title}: {live_event.title}'

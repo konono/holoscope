@@ -50,7 +50,8 @@ class Holoscope(object):
         events = []
         for resp in responses:
             events.append(LiveEvent(resp))
-            log.info(f'Live event found {events[-1].channel_title}: {events[-1].title}.')
+            log.info(f'Live event found [{events[-1].id}] {events[-1].channel_title}:' +
+                     f'{events[-1].title}.')
 
         exporter = exporter_module.Exporter(self.cnf)
         exporter.create_event(events)
