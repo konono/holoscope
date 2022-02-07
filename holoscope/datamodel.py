@@ -74,6 +74,15 @@ class GCalEvent():
 
 
 @dataclass
+class AwsConfiguration:
+    kms_key_id: str
+    access_key_id: Optional[str] = None
+    secret_access_key: Optional[str] = None
+    dynamodb_table: Optional[str] = 'holoscope'
+    dynamodb_hash_key_name: Optional[str] = 'hashKey'
+
+
+@dataclass
 class GeneralConfiguration:
     loglevel: Optional[str] = None
     logdir: Optional[str] = None
@@ -88,23 +97,21 @@ class GoogleCalendarConfiguration:
 
 
 @dataclass
+class HoloduleConfiguration:
+    holomenbers: List[str]
+    holodule_url: Optional[str] = 'https://schedule.hololive.tv/simple'
+
+
+@dataclass
 class YoutubeConfiguration:
     api_key: str
     channel_ids: Optional[List[str]] = None
 
 
 @dataclass
-class AwsConfiguration:
-    kms_key_id: str
-    access_key_id: Optional[str] = None
-    secret_access_key: Optional[str] = None
-    dynamodb_table: Optional[str] = 'holoscope'
-    dynamodb_hash_key_name: Optional[str] = 'hashKey'
-
-
-@dataclass
 class Configuration:
+    aws: Optional[AwsConfiguration] = None
     general: Optional[GeneralConfiguration] = None
+    holodule: Optional[HoloduleConfiguration] = None
     google_calendar: Optional[GoogleCalendarConfiguration] = None
     youtube: Optional[YoutubeConfiguration] = None
-    aws: Optional[AwsConfiguration] = None

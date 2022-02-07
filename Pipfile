@@ -33,6 +33,7 @@ dacite = "*"
 tox = "*"
 boto3 = "*"
 urlextract = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 pre-commit = "*"

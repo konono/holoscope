@@ -6,7 +6,6 @@ import json
 import logging
 
 from apiclient.discovery import build
-
 from holoscope.config import ConfigLoader
 from holoscope.datamodel import LiveEvent
 from holoscope.utils import YoutubeUtils
@@ -39,7 +38,10 @@ class Holoscope(object):
                                                   package='Exporter')
 
         youtube_utils = YoutubeUtils(youtube)
-        importer = importer_module.Importer(self.cnf, youtube_utils)
+        if self.cnf.general.importer_plugin == 'holodule':
+            importer = importer_module.Importer(self.cnf)
+        else:
+            importer = importer_module.Importer(self.cnf, youtube_utils)
 
         responses = youtube_utils.get_live_event(importer.video_ids)
         log.debug('LIVE EVENT JSON DUMP')
