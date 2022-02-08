@@ -63,7 +63,24 @@ cd holoscope
 pipenv sync
 ```
 
-#### 3. 実行
+#### 3. youtube API keyとgoogle calendarのcredentialダウンロード
+  - [youtube API KEYの作成方法](https://qiita.com/shinkai_/items/10a400c25de270cb02e4)
+  - [Google Calendar API client jsonのダウンロード（Step1まで）](https://dev.classmethod.jp/articles/google-calendar-api-get-start/)
+
+ダウンロードしたclient_secret_xxxx.apps.googleusercontent.com.jsonをgit cloneしたディレクトリに「**credentials.json**」の名前に変更しコピーしてください。
+
+#### 4. google calendar APIのtoken取得
+```
+pipenv run python3 set_token2dynamodb.py
+
+e.g.
+[INFO][set_token2dynamodb][<module>] Token was not found in dynamodb
+[INFO][__init__][autodetect] file_cache is only supported with oauth2client<4.0.0
+[INFO][set_token2dynamodb][<module>] Create token
+[INFO][set_token2dynamodb][<module>] Success validation token
+```
+
+#### 5. 実行
 ```
 pipenv run python3 run.py
 ```
@@ -86,7 +103,8 @@ pipenv sync
 #### 3. youtube API keyとgoogle calendarのcredentialダウンロード
   - [youtube API KEYの作成方法](https://qiita.com/shinkai_/items/10a400c25de270cb02e4)
   - [Google Calendar API client jsonのダウンロード（Step1まで）](https://dev.classmethod.jp/articles/google-calendar-api-get-start/)
-  
+
+ダウンロードしたclient_secret_xxxx.apps.googleusercontent.com.jsonをgit cloneしたディレクトリに「**credentials.json**」の名前に変更しコピーしてください。
 
 #### 4. AWSにterraform用のユーザー作成
 
