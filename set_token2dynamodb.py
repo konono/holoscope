@@ -62,7 +62,15 @@ if __name__ == '__main__':
         style='{'
     )
     token_manager = TokenManager(config, token_type='google_calendar')
-    if not token_manager.is_exist_hash_key:
+    if not token_manager.is_exist_hash_key():
+        log.info('Token was not found in dynamodb')
         creds = create_token()
         valid_token(creds)
-        token_manager.set_token()
+        token_manager.set_token_to_dynamodb()
+        log.info('Insert token to dynamodb')
+        creds = token_manager._get_token()
+        log.info('Success get token from dynamodb')
+    else:
+        log.info('Token was found in dynamodb')
+        creds = token_manager._get_token()
+        log.info('Success get token from dynamodb')

@@ -76,7 +76,7 @@ class GCalEvent():
 
 @dataclass
 class AwsConfiguration:
-    kms_key_id: str
+    kms_key_id: Optional[str] = None
     access_key_id: Optional[str] = None
     secret_access_key: Optional[str] = None
     dynamodb_table: Optional[str] = 'holoscope'
