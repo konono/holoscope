@@ -36,7 +36,7 @@ resource "aws_lambda_function" "holoscope" {
   role             = aws_iam_role.lambda_iam_role.arn
   source_code_hash = data.archive_file.function_zip.output_base64sha256
   layers           = [aws_lambda_layer_version.lambda_layer.arn]
-  timeout          = 10
+  timeout          = 30
 }
 
 # cloudwatch event rule
