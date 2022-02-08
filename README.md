@@ -3,7 +3,7 @@ hololive schdule export to calendar.
 
 ## 概要
 
-holoscopeはholoviveの所属タレント(ホロメン)の予定をgoogle calendarに転送できるアプリです。
+holoscopeはholoviveの所属タレント(ホロメン)の予定をgoogle calendarに登録できるアプリです。
 
 動作環境は以下になります。
   - Python3.9 on Linux/Mac(Windowsは未確認)
