@@ -8,26 +8,29 @@
 -i https://pypi.org/simple
 arrow==1.2.2
 beautifulsoup4==4.10.0
-boto3==1.20.49
-botocore==1.23.49; python_version >= '3.6'
+boto3==1.20.54
+botocore==1.23.54; python_version >= '3.6'
 cachetools==5.0.0
 certifi==2021.10.8
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
 dacite==1.6.0
 distlib==0.3.4
 filelock==3.4.2; python_version >= '3.7'
 google-api-core==2.5.0
-google-api-python-client==2.36.0
+google-api-python-client==2.37.0
 google-auth-httplib2==0.1.0
 google-auth-oauthlib==0.4.6
 google-auth==2.6.0
 googleapis-common-protos==1.54.0
 httplib2==0.20.4
 idna==3.3
+imagehash==4.2.1
 jmespath==0.10.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+numpy==1.22.2; python_version >= '3.8'
 oauthlib==3.2.0
 packaging==21.3; python_version >= '3.6'
-platformdirs==2.4.1; python_version >= '3.7'
+pillow==9.0.1; python_version >= '3.7'
+platformdirs==2.5.0; python_version >= '3.7'
 pluggy==1.0.0; python_version >= '3.6'
 protobuf==3.19.4
 py==1.11.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
@@ -35,10 +38,12 @@ pyasn1-modules==0.2.8
 pyasn1==0.4.8
 pyparsing==3.0.7
 python-dateutil==2.8.2
+pywavelets==1.2.0; python_version >= '3.7'
 requests-oauthlib==1.3.1
 requests==2.27.1
 rsa==4.8
 s3transfer==0.5.1; python_version >= '3.6'
+scipy==1.8.0; python_version < '3.11' and python_version >= '3.8'
 six==1.16.0
 soupsieve==2.3.1; python_version >= '3.6'
 toml==0.10.2

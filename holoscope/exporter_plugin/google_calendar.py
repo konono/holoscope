@@ -95,7 +95,10 @@ class Exporter(object):
 
     def create_event(self, live_events: list) -> None:
         for live_event in live_events:
-            title_str = f'{live_event.channel_title}: {live_event.title}'
+            if live_event.collaborate:
+                title_str = f'[{live_event.collaborate}コラボ] {live_event.channel_title}: {live_event.title}'
+            else:
+                title_str = f'{live_event.channel_title}: {live_event.title}'
             body = {
                 # 予定のタイトル
                 'summary': f'{title_str}',
@@ -136,7 +139,10 @@ class Exporter(object):
                 log.info(f'[{live_event.id}]: Create {title_str} has been scheduled.')
 
     def _update_event(self, event_id: str, live_event: LiveEvent):
-        title_str = f'{live_event.channel_title}: {live_event.title}'
+        if live_event.collaborate:
+            title_str = f'[{live_event.collaborate}コラボ] {live_event.channel_title}: {live_event.title}'
+        else:
+            title_str = f'{live_event.channel_title}: {live_event.title}'
         body = {
             # 予定のタイトル
             'summary': f'{title_str}',

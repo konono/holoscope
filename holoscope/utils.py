@@ -20,6 +20,12 @@ class YoutubeUtils():
                                                     part=part).execute()
         return video_response.get('items', [])
 
+    def get_channels(self, channel_ids: list) -> list:
+        part = 'snippet,contentDetails,statistics'
+        response = self.youtube.channels().list(id=','.join(channel_ids),
+                                                part=part).execute()
+        return response.get('items', [])
+
 
 class GooglecClendarUtils(object):
     def __init__(self, google_calendar_instance) -> None:

@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import importlib
-import json
 import logging
 import socket
 
 from apiclient.discovery import build
+
 from holoscope.config import ConfigLoader
-from holoscope.datamodel import LiveEvent
-from holoscope.utils import YoutubeUtils
 
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
@@ -40,22 +38,8 @@ class Holoscope(object):
         exporter_module = importlib.import_module(exporter_plugin_path,
                                                   package='Exporter')
 
-        youtube_utils = YoutubeUtils(youtube)
-        if self.cnf.general.importer_plugin == 'holodule':
-            importer = importer_module.Importer(self.cnf)
-        else:
-            importer = importer_module.Importer(self.cnf, youtube_utils)
-
-        responses = youtube_utils.get_live_event(importer.video_ids)
-        log.debug('LIVE EVENT JSON DUMP')
-        log.debug(json.dumps(responses))
-
-        events = []
-        for resp in responses:
-            events.append(LiveEvent(resp))
-            log.info(f'Live event found [{events[-1].id}] {events[-1].channel_title}:' +
-                     f'{events[-1].title}.')
-
+        importer = importer_module.Importer(self.cnf, youtube)
+        events = importer.live_events
         exporter = exporter_module.Exporter(self.cnf)
         exporter.create_event(events)
 

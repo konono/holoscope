@@ -11,8 +11,10 @@ from urllib.parse import urlparse
 
 
 class LiveEvent():
-    def __init__(self, data) -> None:
+    def __init__(self, data, actor, collaborate) -> None:
         self._data = data
+        self._actor = actor
+        self._collaborate = collaborate
 
     @property
     def id(self) -> str:
@@ -24,7 +26,12 @@ class LiveEvent():
 
     @property
     def begin(self) -> str:
-        begin = self._data['liveStreamingDetails']['scheduledStartTime']
+        try:
+            begin = self._data['liveStreamingDetails']['scheduledStartTime']
+        except KeyError:
+            pass
+            # begin = self._data[]
+
         return arrow.get(begin)
 
     @property
@@ -34,6 +41,14 @@ class LiveEvent():
     @property
     def channel_title(self) -> str:
         return self._data['snippet']['channelTitle']
+
+    @property
+    def actor(self) -> str:
+        return self._actor
+
+    @property
+    def collaborate(self) -> Optional[str]:
+        return self._collaborate
 
 
 class GCalEvent():
