@@ -21,5 +21,6 @@ pipenv run pip3 install -r ../../requirements.txt -t ./build/layer/python/
 cp -r $PROJECT_DIR ./build/layer/python/
 
 # Remove pycache in build directory
-find build -type f | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm
-
+find build -type f | grep -E "(__pycache__|\.pyc|\.pyo|\.npz$)" | xargs rm
+rm -rf ./build/layer/python/googleapiclient/discovery_cache/documents
+rm -rf ./build/layer/python/botocore/data
