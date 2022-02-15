@@ -4,4 +4,4 @@ exclude =
     .venv,
     __pycache__,
     terraform,
-max-line-length = 107
+max-line-length = 108

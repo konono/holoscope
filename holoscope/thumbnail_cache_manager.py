@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import boto3
-import imagehash
-import io
+# import imagehash
+# import io
 import logging
 import os
 import toml
-import urllib.request
+# import urllib.request
 
 from boto3.dynamodb.conditions import Key
 from boto3.session import Session
 from holoscope.errors import RestError
 from holoscope.utils import YoutubeUtils
-from PIL import Image
+# from PIL import Image
 
 
 log = logging.getLogger(__name__)
@@ -91,19 +91,19 @@ class ThumbnailCacheManager(object):
     def _update_thumbnail_cache_to_dynamodb(self, thumbnail_cache) -> dict:
         thumbnail_cache = self._update_youtube_thumbnail(thumbnail_cache)
         for i in thumbnail_cache:
-            if not thumbnail_cache[i].get('holodule_img_hash'):
-                if thumbnail_cache[i].get('holodule_url'):
-                    img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
-                    img_bin = io.BytesIO(img_read)
-                    img_hash = imagehash.average_hash(Image.open(img_bin))
-                    thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
+            # if not thumbnail_cache[i].get('holodule_img_hash'):
+            #     if thumbnail_cache[i].get('holodule_url'):
+            #         img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
+            #         img_bin = io.BytesIO(img_read)
+            #         img_hash = imagehash.average_hash(Image.open(img_bin))
+            #         thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
             if self.data.get(i):
                 if self.data[i].get('holodule_url') != thumbnail_cache[i].get('holodule_url'):
                     thumbnail_cache[i].update(self.data[i])
-                    img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
-                    img_bin = io.BytesIO(img_read)
-                    img_hash = imagehash.average_hash(Image.open(img_bin))
-                    thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
+                    # img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
+                    # img_bin = io.BytesIO(img_read)
+                    # img_hash = imagehash.average_hash(Image.open(img_bin))
+                    # thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
                     log.info(f'Update holodule thumbnail url: {i}')
 
         response = self.table.update_item(
@@ -123,19 +123,19 @@ class ThumbnailCacheManager(object):
         if thumbnail_cache:
             thumbnail_cache = self._update_youtube_thumbnail(thumbnail_cache)
             for i in thumbnail_cache:
-                if not thumbnail_cache[i].get('holodule_img_hash'):
-                    if thumbnail_cache[i].get('holodule_url'):
-                        img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
-                        img_bin = io.BytesIO(img_read)
-                        img_hash = imagehash.average_hash(Image.open(img_bin))
-                        thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
+                # if not thumbnail_cache[i].get('holodule_img_hash'):
+                #     if thumbnail_cache[i].get('holodule_url'):
+                #         img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
+                #         img_bin = io.BytesIO(img_read)
+                #         img_hash = imagehash.average_hash(Image.open(img_bin))
+                #         thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
                 if self.data.get(i):
                     if self.data[i].get('holodule_url') != thumbnail_cache[i].get('holodule_url'):
                         thumbnail_cache[i].update(self.data[i])
-                        img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
-                        img_bin = io.BytesIO(img_read)
-                        img_hash = imagehash.average_hash(Image.open(img_bin))
-                        thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
+                        # img_read = urllib.request.urlopen(thumbnail_cache[i]['holodule_url']).read()
+                        # img_bin = io.BytesIO(img_read)
+                        # img_hash = imagehash.average_hash(Image.open(img_bin))
+                        # thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
                         log.info(f'Update holodule thumbnail url: {i}')
 
             with open(f'{self.hash_key}.toml', 'wt') as f:
@@ -151,20 +151,20 @@ class ThumbnailCacheManager(object):
         responses = youtube_utils.get_channels([thumbnail_cache[i]['channel'] for i in thumbnail_cache])
         for resp in responses:
             for i in thumbnail_cache:
-                if not thumbnail_cache[i].get('youtube_img_hash'):
-                    if thumbnail_cache[i].get('youtube_url'):
-                        img_read = urllib.request.urlopen(thumbnail_cache[i]['youtube_url']).read()
-                        img_bin = io.BytesIO(img_read)
-                        img_hash = imagehash.average_hash(Image.open(img_bin))
-                        thumbnail_cache[i]['youtube_img_hash'] = str(img_hash)
+                # if not thumbnail_cache[i].get('youtube_img_hash'):
+                #     if thumbnail_cache[i].get('youtube_url'):
+                #         img_read = urllib.request.urlopen(thumbnail_cache[i]['youtube_url']).read()
+                #         img_bin = io.BytesIO(img_read)
+                #         img_hash = imagehash.average_hash(Image.open(img_bin))
+                #         thumbnail_cache[i]['youtube_img_hash'] = str(img_hash)
                 if i in resp['snippet']['title'] and thumbnail_cache[i]['channel'] == resp['id']:
                     if (thumbnail_cache[i].get('youtube_url') !=
                             resp['snippet']['thumbnails']['default']['url']):
                         thumbnail_cache[i]['youtube_url'] = resp['snippet']['thumbnails']['default']['url']
-                        img_read = urllib.request.urlopen(thumbnail_cache[i]['youtube_url']).read()
-                        img_bin = io.BytesIO(img_read)
-                        img_hash = imagehash.average_hash(Image.open(img_bin))
-                        thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
+                        # img_read = urllib.request.urlopen(thumbnail_cache[i]['youtube_url']).read()
+                        # img_bin = io.BytesIO(img_read)
+                        # img_hash = imagehash.average_hash(Image.open(img_bin))
+                        # thumbnail_cache[i]['holodule_img_hash'] = str(img_hash)
                         log.info(f'Update youtube thumbnail url: {i}')
         return thumbnail_cache
 

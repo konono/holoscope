@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import imagehash
-import io
+# import imagehash
+# import io
 import json
 import logging
 import requests
 import socket
-import urllib.request
+# import urllib.request
 
 from bs4 import BeautifulSoup
-from PIL import Image
+# from PIL import Image
 from urllib.parse import urlparse
 
 from ..datamodel import LiveEvent
@@ -47,14 +47,14 @@ class Importer(object):
                 elif thumbnail_cache[i].get('holodule_url') in program['collaborators']:
                     program['collaborate'] = i
                     programs.append(program)
-                else:
-                    for collaborator in program['collaborators']:
-                        img_read = urllib.request.urlopen(collaborator).read()
-                        img_bin = io.BytesIO(img_read)
-                        img_hash = imagehash.average_hash(Image.open(img_bin))
-                        if (imagehash.hex_to_hash(thumbnail_cache[i]['youtube_img_hash']) - img_hash) < 4:
-                            program['collaborate'] = i
-                            programs.append(program)
+                # else:
+                #     for collaborator in program['collaborators']:
+                #         img_read = urllib.request.urlopen(collaborator).read()
+                #         img_bin = io.BytesIO(img_read)
+                #         img_hash = imagehash.average_hash(Image.open(img_bin))
+                #         if (imagehash.hex_to_hash(thumbnail_cache[i]['youtube_img_hash']) - img_hash) < 4:
+                #             program['collaborate'] = i
+                #             programs.append(program)
 
         video_ids = [program.get('video_id') for program in programs]
         if len(video_ids) > 50:

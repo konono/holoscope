@@ -33,7 +33,6 @@ dacite = "*"
 tox = "*"
 boto3 = "*"
 beautifulsoup4 = "*"
-imagehash = "*"
 
 [dev-packages]
 pre-commit = "*"
