@@ -157,7 +157,7 @@ class ThumbnailCacheManager(object):
                 #         img_bin = io.BytesIO(img_read)
                 #         img_hash = imagehash.average_hash(Image.open(img_bin))
                 #         thumbnail_cache[i]['youtube_img_hash'] = str(img_hash)
-                if i in resp['snippet']['title'] and thumbnail_cache[i]['channel'] == resp['id']:
+                if thumbnail_cache[i]['channel'] == resp['id']:
                     if (thumbnail_cache[i].get('youtube_url') !=
                             resp['snippet']['thumbnails']['default']['url']):
                         thumbnail_cache[i]['youtube_url'] = resp['snippet']['thumbnails']['default']['url']
