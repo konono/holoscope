@@ -3,6 +3,7 @@
 
 # import imagehash
 # import io
+import itertools
 import json
 import logging
 import requests
@@ -38,7 +39,8 @@ class Importer(object):
                         collaborate_events.pop(y)
                         log.info(f'{ce.title} was deleted because duplicate event.')
                         break
-        return [i.values() for i in primary_events] + [j.values() for j in primary_events]
+        events = [list(i.values()) for i in primary_events] + [list(j.values()) for j in collaborate_events]
+        return list(itertools.chain.from_iterable(events))
 
     def _get_live_events(self) -> list:
         events = []
