@@ -28,6 +28,18 @@ class Importer(object):
         self.youtube = youtube_instance
         self.live_events = self._get_live_events()
 
+    def _deduplicate_live_events(self, events) -> list:
+        primary_events = [{event.actor: event} for event in events if not event.collaborate]
+        collaborate_events = [{event.collaborate: event} for event in events if event.collaborate]
+        for i in self.cnf.holodule.holomenbers:
+            for y, ce in enumerate([x[i] for x in collaborate_events if x.get(i)]):
+                for pe in [x[i] for x in primary_events if x.get(i)]:
+                    if ce.begin == pe.begin:
+                        collaborate_events.pop(y)
+                        log.info(f'{ce.title} was deleted because duplicate event.')
+                        break
+        return [i.values() for i in primary_events] + [j.values() for j in primary_events]
+
     def _get_live_events(self) -> list:
         events = []
         programs = []
@@ -87,7 +99,7 @@ class Importer(object):
                                         programs[j].get('collaborate')))
                 log.info(f'Live event found [{events[-1].id}] {events[-1].channel_title}:' +
                          f'{events[-1].title}.')
-        return events
+        return self._deduplicate_live_events(events)
 
     def _get_programs(self, youtube_utils) -> list:
         programs = []
