@@ -30,17 +30,25 @@ class Importer(object):
         self.live_events = self._get_live_events()
 
     def _deduplicate_live_events(self, events) -> list:
-        primary_events = [{event.actor: event} for event in events if not event.collaborate]
-        collaborate_events = [{event.collaborate: event} for event in events if event.collaborate]
+        primary_events = [{e.actor: e} for e in events if not e.collaborate]
+        collaborate_events = [{collabo: e} for e in events if e.collaborate for collabo in e.collaborate]
+        deleted_items = []
         for i in self.cnf.holodule.holomenbers:
-            for y, ce in enumerate([x[i] for x in collaborate_events if x.get(i)]):
-                for pe in [x[i] for x in primary_events if x.get(i)]:
-                    if ce.begin == pe.begin:
-                        collaborate_events.pop(y)
-                        log.info(f'{ce.title} was deleted because duplicate event.')
-                        break
-        events = [list(i.values()) for i in primary_events] + [list(j.values()) for j in collaborate_events]
-        return list(itertools.chain.from_iterable(events))
+            for y, ce in enumerate(collaborate_events):
+                if ce.get(i):
+                    for pe in [x[i] for x in primary_events if x.get(i)]:
+                        if ce[i].begin == pe.begin:
+                            deleted_items.append(collaborate_events.pop(y))
+                            log.info(f'{ce[i].title} was deleted because duplicate event.')
+                            break
+        # primary_eventsとcollaborate_eventsを二次元配列にした後、flattenする
+        events = list(itertools.chain.from_iterable(([list(i.values()) for i in primary_events]
+                                                    + [list(j.values()) for j in collaborate_events])))
+        # 削除したオブジェクトと同一のオブジェクトがeventsの中にあれば削除する
+        for d in deleted_items:
+            events = [event for event in events if event != list(d.values())[0]]
+        # コラボレーターが複数人いる場合にeventが重複するので、重複しているイベントがあれば削除
+        return list(set(events))
 
     def _get_live_events(self) -> list:
         events = []
@@ -52,14 +60,15 @@ class Importer(object):
             thumbnail_hash[program.get('actor')] = {'holodule_url': program.get('img')}
         thumbnail_cache_manager = ThumbnailCacheManager(self.cnf, self.youtube, thumbnail_hash)
         thumbnail_cache = thumbnail_cache_manager.get_thumbnail_cache()
-
+        # 配信予定でループして、actorが一致したらbreak、コラボ予定であればcollaboratorsを追加
         for program in all_programs:
             for i in self.cnf.holodule.holomenbers:
                 if i == program.get('actor'):
                     program['collaborate'] = None
                     programs.append(program)
-                elif thumbnail_cache[i].get('holodule_url') in program['collaborators']:
-                    program['collaborate'] = i
+                    break
+                if thumbnail_cache[i].get('holodule_url') in program['collaborators']:
+                    program['collaborate'].append(i)
                     programs.append(program)
                 # else:
                 #     for collaborator in program['collaborators']:
@@ -69,7 +78,8 @@ class Importer(object):
                 #         if (imagehash.hex_to_hash(thumbnail_cache[i]['youtube_img_hash']) - img_hash) < 4:
                 #             program['collaborate'] = i
                 #             programs.append(program)
-
+        # 同一のprogramがlist内にあった場合削除
+        programs = list(map(json.loads, set(map(json.dumps, programs))))
         video_ids = [program.get('video_id') for program in programs]
         if len(video_ids) > 50:
             i = 0
@@ -131,6 +141,7 @@ class Importer(object):
             result = {'actor': actor,
                       'collaborators': collaborators,
                       'video_id': video_id,
-                      'img': s_img}
+                      'img': s_img,
+                      'collaborate': []}
             programs.append(result)
         return programs

@@ -96,7 +96,8 @@ class Exporter(object):
     def create_event(self, live_events: list) -> None:
         for live_event in live_events:
             if live_event.collaborate:
-                title_str = f'[{live_event.collaborate}コラボ] {live_event.channel_title}: {live_event.title}'
+                title_str = (f'[{", ".join(live_event.collaborate)} コラボ] ' +
+                             f'{live_event.channel_title}: {live_event.title}')
             else:
                 title_str = f'{live_event.channel_title}: {live_event.title}'
             body = {
@@ -140,7 +141,8 @@ class Exporter(object):
 
     def _update_event(self, event_id: str, live_event: LiveEvent):
         if live_event.collaborate:
-            title_str = f'[{live_event.collaborate}コラボ] {live_event.channel_title}: {live_event.title}'
+            title_str = (f'[{", ".join(live_event.collaborate)} コラボ] ' +
+                         f'{live_event.channel_title}: {live_event.title}')
         else:
             title_str = f'{live_event.channel_title}: {live_event.title}'
         body = {
