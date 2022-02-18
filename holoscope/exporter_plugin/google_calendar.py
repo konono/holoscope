@@ -42,6 +42,7 @@ class Exporter(object):
             credentials=token_manager._get_token()
         )
         self.calendar_id = config.google_calendar.calendar_id
+        self.actual_end_time = config.google_calendar.enable_actual_end_time
         self.events = self._get_events()
 
     @staticmethod
@@ -103,9 +104,13 @@ class Exporter(object):
             if live_event.actual_start_time:
                 start_dateTime = live_event.actual_start_time.format(ISO861FORMAT) + 'Z'
                 end_dateTime = live_event.actual_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
+                if live_event.actual_end_time and self.actual_end_time:
+                    end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
             else:
                 start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
                 end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
+                if live_event.actual_end_time and self.actual_end_time:
+                    end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
             body = {
                 # 予定のタイトル
                 'summary': f'{title_str}',
@@ -132,14 +137,26 @@ class Exporter(object):
                 if title_str == event.title:
                     if live_event.actual_start_time:
                         if live_event.actual_start_time.to('Asia/Tokyo') == event.start_time:
-                            log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                     'is already scheduled.')
-                            continue
+                            if live_event.actual_end_time and self.actual_end_time:
+                                if live_event.actual_end_time.to('Asia/Tokyo') == event.end_time:
+                                    log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                             'is already scheduled.')
+                                    continue
+                            else:
+                                log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                         'is already scheduled.')
+                                continue
                     else:
                         if live_event.scheduled_start_time.to('Asia/Tokyo') == event.start_time:
-                            log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                     'is already scheduled.')
-                            continue
+                            if live_event.actual_end_time and self.actual_end_time:
+                                if live_event.actual_end_time.to('Asia/Tokyo') == event.end_time:
+                                    log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                             'is already scheduled.')
+                                    continue
+                            else:
+                                log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                         'is already scheduled.')
+                                continue
                 self._update_event(event.id, live_event)
                 log.info(f'[{live_event.id}]: Update the scheduled {live_event.title}.')
             else:
@@ -160,9 +177,13 @@ class Exporter(object):
         if live_event.actual_start_time:
             start_dateTime = live_event.actual_start_time.format(ISO861FORMAT) + 'Z'
             end_dateTime = live_event.actual_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
+            if live_event.actual_start_time and self.actual_end_time:
+                end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
         else:
             start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
             end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
+            if live_event.actual_start_time and self.actual_end_time:
+                end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
         body = {
             # 予定のタイトル
             'summary': f'{title_str}',

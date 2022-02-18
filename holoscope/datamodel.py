@@ -38,6 +38,14 @@ class LiveEvent():
         return arrow.get(self._data['liveStreamingDetails']['scheduledStartTime'])
 
     @property
+    def actual_end_time(self) -> Optional[Arrow]:
+        try:
+            actual_end_time = arrow.get(self._data['liveStreamingDetails']['actualEndTime'])
+        except KeyError:
+            actual_end_time = None
+        return actual_end_time
+
+    @property
     def channel_id(self) -> str:
         return self._data['snippet']['channelId']
 
@@ -70,6 +78,11 @@ class GCalEvent():
     def start_time(self) -> str:
         start_time = self._data['start']['dateTime']
         return arrow.get(start_time)
+
+    @property
+    def end_time(self) -> str:
+        end_time = self._data['end']['dateTime']
+        return arrow.get(end_time)
 
     @property
     def link(self) -> str:
@@ -113,6 +126,7 @@ class GeneralConfiguration:
 @dataclass
 class GoogleCalendarConfiguration:
     calendar_id: str
+    enable_actual_end_time: Optional[bool] = False
 
 
 @dataclass
