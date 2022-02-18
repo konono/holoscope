@@ -4,6 +4,7 @@
 import arrow
 import re
 
+from arrow.arrow import Arrow
 from dataclasses import dataclass
 from typing import List
 from typing import Optional
@@ -25,14 +26,16 @@ class LiveEvent():
         return self._data['snippet']['title']
 
     @property
-    def begin(self) -> str:
+    def actual_start_time(self) -> Optional[Arrow]:
         try:
-            begin = self._data['liveStreamingDetails']['scheduledStartTime']
+            actual_start_time = arrow.get(self._data['liveStreamingDetails']['actualStartTime'])
         except KeyError:
-            pass
-            # begin = self._data[]
+            actual_start_time = None
+        return actual_start_time
 
-        return arrow.get(begin)
+    @property
+    def scheduled_start_time(self) -> Optional[Arrow]:
+        return arrow.get(self._data['liveStreamingDetails']['scheduledStartTime'])
 
     @property
     def channel_id(self) -> str:
@@ -64,9 +67,9 @@ class GCalEvent():
         return self._data['summary']
 
     @property
-    def begin(self) -> str:
-        begin = self._data['start']['dateTime']
-        return arrow.get(begin)
+    def start_time(self) -> str:
+        start_time = self._data['start']['dateTime']
+        return arrow.get(start_time)
 
     @property
     def link(self) -> str:

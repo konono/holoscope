@@ -100,6 +100,12 @@ class Exporter(object):
                              f'{live_event.channel_title}: {live_event.title}')
             else:
                 title_str = f'{live_event.channel_title}: {live_event.title}'
+            if live_event.actual_start_time:
+                start_dateTime = live_event.actual_start_time.format(ISO861FORMAT) + 'Z'
+                end_dateTime = live_event.actual_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
+            else:
+                start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
+                end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
             body = {
                 # 予定のタイトル
                 'summary': f'{title_str}',
@@ -112,26 +118,32 @@ class Exporter(object):
                 '''),
                 # 予定の開始時刻
                 'start': {
-                    'dateTime': live_event.begin.format(ISO861FORMAT) + 'Z',
+                    'dateTime': start_dateTime,
                     'timeZone': 'Japan'
                 },
                 # 予定の終了時刻
                 'end': {
-                    'dateTime': live_event.begin.shift(hours=+1).format(ISO861FORMAT) + 'Z',
+                    'dateTime': end_dateTime,
                     'timeZone': 'Japan'
                 },
             }
             if (event := [event for event in self.events if live_event.id == event.video_id]):
                 event = event[0]
                 if title_str == event.title:
-                    if live_event.begin.to('Asia/Tokyo') == event.begin:
-                        log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                 'is already scheduled.')
-                        continue
+                    if live_event.actual_start_time:
+                        if live_event.actual_start_time.to('Asia/Tokyo') == event.start_time:
+                            log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                     'is already scheduled.')
+                            continue
+                    else:
+                        if live_event.scheduled_start_time.to('Asia/Tokyo') == event.start_time:
+                            log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                     'is already scheduled.')
+                            continue
                 self._update_event(event.id, live_event)
                 log.info(f'[{live_event.id}]: Update the scheduled {live_event.title}.')
             else:
-                if live_event.begin > arrow.utcnow().shift(days=FUTURE):
+                if live_event.scheduled_start_time > arrow.utcnow().shift(days=FUTURE):
                     log.info(f'[{live_event.id}]: {title_str} was not scheduled, ' +
                              f'because it is {FUTURE} days away.')
                     continue
@@ -145,6 +157,12 @@ class Exporter(object):
                          f'{live_event.channel_title}: {live_event.title}')
         else:
             title_str = f'{live_event.channel_title}: {live_event.title}'
+        if live_event.actual_start_time:
+            start_dateTime = live_event.actual_start_time.format(ISO861FORMAT) + 'Z'
+            end_dateTime = live_event.actual_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
+        else:
+            start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
+            end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
         body = {
             # 予定のタイトル
             'summary': f'{title_str}',
@@ -157,12 +175,12 @@ class Exporter(object):
             '''),
             # 予定の開始時刻
             'start': {
-                'dateTime': live_event.begin.format(ISO861FORMAT) + 'Z',
+                'dateTime': start_dateTime,
                 'timeZone': 'Japan'
             },
             # 予定の終了時刻
             'end': {
-                'dateTime': live_event.begin.shift(hours=+1).format(ISO861FORMAT) + 'Z',
+                'dateTime': end_dateTime,
                 'timeZone': 'Japan'
             },
         }

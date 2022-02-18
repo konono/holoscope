@@ -37,7 +37,7 @@ class Importer(object):
             for y, ce in enumerate(collaborate_events):
                 if ce.get(i):
                     for pe in [x[i] for x in primary_events if x.get(i)]:
-                        if ce[i].begin == pe.begin:
+                        if ce[i].scheduled_start_time == pe.scheduled_start_time:
                             deleted_items.append(collaborate_events.pop(y))
                             log.info(f'{ce[i].title} was deleted because duplicate event.')
                             break
