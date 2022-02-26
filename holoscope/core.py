@@ -42,6 +42,7 @@ class Holoscope(object):
         events = importer.live_events
         exporter = exporter_module.Exporter(self.cnf)
         exporter.create_event(events)
+        exporter.delete_deplicate_event(events)
 
 
 if __name__ == '__main__':

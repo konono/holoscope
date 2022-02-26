@@ -6,6 +6,7 @@ import json
 import logging
 import os.path
 import pickle
+import re
 import socket
 import textwrap
 
@@ -43,6 +44,7 @@ class Exporter(object):
         )
         self.calendar_id = config.google_calendar.calendar_id
         self.actual_end_time = config.google_calendar.enable_actual_end_time
+        self.holomenbers = config.holodule.holomenbers
         self.events = self._get_events()
 
     @staticmethod
@@ -226,3 +228,23 @@ class Exporter(object):
         self.calendar.events().update(calendarId=self.calendar_id,
                                       eventId=event_id,
                                       body=body).execute()
+
+    def delete_deplicate_event(self, live_events: list):
+        pattern = re.compile(r'^\[\D*\sコラボ\]')
+        for i in self.holomenbers:
+            for live_event in live_events:
+                if not live_event.collaborate and live_event.actor == i:
+                    for e in self.events:
+                        match = pattern.match(e.title)
+                        if match:
+                            collabo_title = match.group()
+                        else:
+                            continue
+                        if i not in collabo_title:
+                            continue
+                        if e.scheduled_start_time:
+                            sst = live_event.scheduled_start_time
+                            if e.scheduled_start_time == sst:
+                                self.calendar.events().delete(calendarId=self.calendar_id,
+                                                              eventId=e.id).execute()
+                                log.info(f'[{e.id}] was deleted because deplicate {e.title}.')
