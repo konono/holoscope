@@ -32,21 +32,25 @@ class Importer(object):
     def _deduplicate_live_events(self, events) -> list:
         primary_events = [{e.actor: e} for e in events if not e.collaborate]
         collaborate_events = [{collabo: e} for e in events if e.collaborate for collabo in e.collaborate]
-        deleted_items = []
+        delete_items = []
+        ''' ホロメンのリストと、コラボ予定のeventsでループを回し、
+            推しの配信予定とコラボ予定の時間が重複していた場合はdelete_itemsに追加
+        '''
         for i in self.cnf.holodule.holomenbers:
             for y, ce in enumerate(collaborate_events):
                 if ce.get(i):
                     for pe in [x[i] for x in primary_events if x.get(i)]:
                         if ce[i].scheduled_start_time == pe.scheduled_start_time:
-                            deleted_items.append(collaborate_events.pop(y))
+                            delete_items.append(ce.get(i))
                             log.info(f'{ce[i].title} was deleted because duplicate event.')
                             break
         # primary_eventsとcollaborate_eventsを二次元配列にした後、flattenする
         events = list(itertools.chain.from_iterable(([list(i.values()) for i in primary_events]
                                                     + [list(j.values()) for j in collaborate_events])))
-        # 削除したオブジェクトと同一のオブジェクトがeventsの中にあれば削除する
-        for d in deleted_items:
-            events = [event for event in events if event != list(d.values())[0]]
+        # delete_itemsにあるオブジェクトがeventsの中にあれば削除する
+        for d in delete_items:
+            events = [event for event in events if event != d]
+
         # コラボレーターが複数人いる場合にeventが重複するので、重複しているイベントがあれば削除
         return list(set(events))
 
