@@ -177,13 +177,11 @@ class Exporter(object):
         if live_event.actual_start_time:
             start_dateTime = live_event.actual_start_time.format(ISO861FORMAT) + 'Z'
             end_dateTime = live_event.actual_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
-            if live_event.actual_start_time and self.actual_end_time:
+            if live_event.actual_end_time and self.actual_end_time:
                 end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
         else:
             start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
             end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
-            if live_event.actual_start_time and self.actual_end_time:
-                end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
         body = {
             # 予定のタイトル
             'summary': f'{title_str}',
