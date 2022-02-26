@@ -135,21 +135,20 @@ class Exporter(object):
             if (event := [event for event in self.events if live_event.id == event.video_id]):
                 event = event[0]
                 if title_str == event.title:
-                    if live_event.actual_start_time:
-                        if live_event.actual_start_time.to('Asia/Tokyo') == event.start_time:
-                            if live_event.actual_end_time and self.actual_end_time:
-                                if live_event.actual_end_time.to('Asia/Tokyo') == event.end_time:
-                                    log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                             'is already scheduled.')
-                                    continue
-                            else:
+                    if live_event.actual_start_time and live_event.actual_start_time == event.start_time:
+                        if live_event.actual_end_time and self.actual_end_time:
+                            if live_event.actual_end_time == event.end_time:
                                 log.info(f'[{live_event.id}]: {live_event.title} ' +
                                          'is already scheduled.')
                                 continue
+                        else:
+                            log.info(f'[{live_event.id}]: {live_event.title} ' +
+                                     'is already scheduled.')
+                            continue
                     else:
-                        if live_event.scheduled_start_time.to('Asia/Tokyo') == event.start_time:
+                        if live_event.scheduled_start_time == event.start_time:
                             if live_event.actual_end_time and self.actual_end_time:
-                                if live_event.actual_end_time.to('Asia/Tokyo') == event.end_time:
+                                if live_event.actual_end_time == event.end_time:
                                     log.info(f'[{live_event.id}]: {live_event.title} ' +
                                              'is already scheduled.')
                                     continue
@@ -177,13 +176,11 @@ class Exporter(object):
         if live_event.actual_start_time:
             start_dateTime = live_event.actual_start_time.format(ISO861FORMAT) + 'Z'
             end_dateTime = live_event.actual_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
-            if live_event.actual_start_time and self.actual_end_time:
+            if live_event.actual_end_time and self.actual_end_time:
                 end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
         else:
             start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
             end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
-            if live_event.actual_start_time and self.actual_end_time:
-                end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
         body = {
             # 予定のタイトル
             'summary': f'{title_str}',

@@ -29,18 +29,22 @@ class LiveEvent():
     def actual_start_time(self) -> Optional[Arrow]:
         try:
             actual_start_time = arrow.get(self._data['liveStreamingDetails']['actualStartTime'])
+            actual_start_time = actual_start_time.to('Asia/Tokyo')
         except KeyError:
             actual_start_time = None
         return actual_start_time
 
     @property
     def scheduled_start_time(self) -> Optional[Arrow]:
-        return arrow.get(self._data['liveStreamingDetails']['scheduledStartTime'])
+        scheduled_start_time = arrow.get(self._data['liveStreamingDetails']['scheduledStartTime'])
+        scheduled_start_time = scheduled_start_time.to('Asia/Tokyo')
+        return scheduled_start_time
 
     @property
     def actual_end_time(self) -> Optional[Arrow]:
         try:
             actual_end_time = arrow.get(self._data['liveStreamingDetails']['actualEndTime'])
+            actual_end_time = actual_end_time.to('Asia/Tokyo')
         except KeyError:
             actual_end_time = None
         return actual_end_time
