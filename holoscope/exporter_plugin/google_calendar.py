@@ -131,6 +131,16 @@ class Exporter(object):
                     'dateTime': end_dateTime,
                     'timeZone': 'Japan'
                 },
+                'extendedProperties': {
+                    'private': {
+                        "video_id": live_event.id,
+                        "title": live_event.title,
+                        "channel_id": live_event.channel_id,
+                        "actor": live_event.actor,
+                        "collaborate": live_event.collaborate,
+                        "scheduled_start_time": live_event.scheduled_start_time.format(ISO861FORMAT)
+                    }
+                },
             }
             if (event := [event for event in self.events if live_event.id == event.video_id]):
                 event = event[0]
@@ -201,6 +211,16 @@ class Exporter(object):
             'end': {
                 'dateTime': end_dateTime,
                 'timeZone': 'Japan'
+            },
+            'extendedProperties': {
+                'private': {
+                    "video_id": live_event.id,
+                    "title": live_event.title,
+                    "channel_id": live_event.channel_id,
+                    "actor": live_event.actor,
+                    "collaborate": live_event.collaborate,
+                    "scheduled_start_time": live_event.scheduled_start_time.format(ISO861FORMAT)
+                }
             },
         }
         self.calendar.events().update(calendarId=self.calendar_id,

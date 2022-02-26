@@ -58,7 +58,7 @@ class LiveEvent():
         return self._actor
 
     @property
-    def collaborate(self) -> Optional[str]:
+    def collaborate(self) -> list:
         return self._collaborate
 
 
@@ -79,6 +79,15 @@ class GCalEvent():
         start_time = self._data['start']['dateTime']
         return arrow.get(start_time)
 
+    # TODO(if self._data.get('extendedProperties'): section will planned delete.)
+    @property
+    def scheduled_start_time(self) -> str:
+        if self._data.get('extendedProperties'):
+            scheduled_start_time = self._data['extendedProperties']['private']['scheduled_start_time']
+        else:
+            return None
+        return arrow.get(scheduled_start_time)
+
     @property
     def end_time(self) -> str:
         end_time = self._data['end']['dateTime']
@@ -96,13 +105,44 @@ class GCalEvent():
     def description(self) -> str:
         return self._data['description']
 
+    # TODO(if self._data.get('extendedProperties'): section will planned delete.)
     @property
     def video_id(self) -> str:
+        if self._data.get('extendedProperties'):
+            return self._data['extendedProperties']['private']['video_id']
         url_pattern = "https?://[\w/:%#\$&\?\(\)~\.=\+\-]+"  # noqa: W605
         for url in re.findall(url_pattern, self.description):
             url = urlparse(url)
             if 'youtube.com' in url.netloc or 'youtu.be' in url.netloc:
                 return url.query.split('=')[1]
+
+    # TODO(if self._data.get('extendedProperties'): section will planned delete.)
+    @property
+    def original_title(self) -> str:
+        if self._data.get('extendedProperties'):
+            return self._data['extendedProperties']['private']['title']
+        return None
+
+    # TODO(if self._data.get('extendedProperties'): section will planned delete.)
+    @property
+    def channel_id(self) -> str:
+        if self._data.get('extendedProperties'):
+            return self._data['extendedProperties']['private']['channel_id']
+        return None
+
+    # TODO(if self._data.get('extendedProperties'): section will planned delete.)
+    @property
+    def actor(self) -> str:
+        if self._data.get('extendedProperties'):
+            return self._data['extendedProperties']['private']['actor']
+        return None
+
+    # TODO(if self._data.get('extendedProperties'): section will planned delete.)
+    @property
+    def collaborate(self) -> str:
+        if self._data.get('extendedProperties'):
+            return self._data['extendedProperties']['private']['collaborate']
+        return None
 
 
 @dataclass

@@ -68,7 +68,7 @@ class Importer(object):
         for program in all_programs:
             for i in self.cnf.holodule.holomenbers:
                 if i == program.get('actor'):
-                    program['collaborate'] = None
+                    program['collaborate'] = []
                     programs.append(program)
                     break
                 if thumbnail_cache[i].get('holodule_url') in program['collaborators']:
