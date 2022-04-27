@@ -125,7 +125,7 @@ class Importer(object):
         for div in divs:
             a = div.find('a')
             url = urlparse(a.get("href"))
-            if 'youtube.com' not in url.netloc and 'youtu.be' not in url.netloc:
+            if ('youtube.com' not in url.netloc and 'youtu.be' not in url.netloc) or '/watch' != url.path:
                 continue
             s = a.find('div', class_="col text-right name").get_text()
             actor = '\n'.join(filter(lambda x: x.strip(),
