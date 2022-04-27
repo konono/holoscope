@@ -20,3 +20,4 @@ terraform.tfstate
 terraform.tfstate.backup
 terraform/lambda/build
 terraform/lambda/lambda/
+procedure
