@@ -129,7 +129,7 @@ class Importer(object):
                 continue
             s = a.find('div', class_="col text-right name").get_text()
             actor = '\n'.join(filter(lambda x: x.strip(),
-                                     s.replace(" ", "").split('\r\n')))
+                                     s.replace(" ", "").split('\n')))
             if actor == 'ラプラス':
                 actor = 'ラプラス・ダークネス'
             if actor == 'アキロゼ':
