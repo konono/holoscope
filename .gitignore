@@ -5,6 +5,7 @@
 __pycache__
 .coverage
 .DS_Store
+.idea/
 .pytest_cache
 .test-results
 .tox
