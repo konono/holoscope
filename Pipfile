@@ -30,12 +30,12 @@ uritemplate = "*"
 urllib3 = "*"
 toml = "*"
 dacite = "*"
-tox = "*"
 boto3 = "*"
 beautifulsoup4 = "*"
 
 [dev-packages]
 pre-commit = "*"
+tox = "*"
 
 [requires]
-python_version = "3.9.1"
+python_version = "3.10.6"
