@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "holoscope"
+version = "0.1.0"
+description = ""
+authors = ["konono <kono@kononet.net>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+arrow = "*"
+cachetools = "*"
+certifi = "*"
+charset-normalizer = "*"
+google-api-core = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
+google-auth = "*"
+googleapis-common-protos = "*"
+httplib2 = "*"
+idna = "*"
+oauthlib = "*"
+protobuf = "*"
+pyasn1-modules = "*"
+pyasn1 = "*"
+pyparsing = "*"
+python-dateutil = "*"
+requests-oauthlib = "*"
+requests = "*"
+rsa = "*"
+six = "*"
+uritemplate = "*"
+urllib3 = "*"
+toml = "*"
+dacite = "*"
+boto3 = "*"
+beautifulsoup4 = "*"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "*"
+tox = "*"
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
