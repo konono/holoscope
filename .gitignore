@@ -13,7 +13,7 @@ __pycache__
 token.pickle
 testdata
 todo.txt
-config.toml
+*config.toml
 credentials.json
 .terraform
 .terraform.lock.hcl
