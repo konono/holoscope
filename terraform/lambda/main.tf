@@ -5,7 +5,7 @@ provider "aws" {
 
 # Variables
 variable "system_name" {
-  default = "terraform-lambda-deployment"
+  default = "terraform-lambda-public"
 }
 
 # Archive
@@ -28,7 +28,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 # Function
-resource "aws_lambda_function" "holoscope" {
+resource "aws_lambda_function" "holoscope_public" {
   function_name    = "${var.system_name}_holoscope"
   handler          = "run.lambda_handler"
   filename         = data.archive_file.function_zip.output_path
@@ -40,26 +40,26 @@ resource "aws_lambda_function" "holoscope" {
 }
 
 # cloudwatch event rule
-resource "aws_cloudwatch_event_rule" "holoscope_event_rule" {
-    name                = "holoscope_scheduler"
+resource "aws_cloudwatch_event_rule" "holoscope_public_event_rule" {
+    name                = "${var.system_name}_holoscope_scheduler"
     description         = "Run holoscope every 15 minutes"
     schedule_expression = "cron(0/15 * * * ? *)"
 }
 
 # cloudwatch event target
-resource "aws_cloudwatch_event_target" "holoscope_event_target" {
-    rule      = aws_cloudwatch_event_rule.holoscope_event_rule.name
-    target_id = "holoscope"
-    arn       = aws_lambda_function.holoscope.arn
+resource "aws_cloudwatch_event_target" "holoscope_public_event_target" {
+    rule      = aws_cloudwatch_event_rule.holoscope_public_event_rule.name
+    target_id = "holoscope_public"
+    arn       = aws_lambda_function.holoscope_public.arn
 }
 
 # Permission
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_holoscope" {
     statement_id  = "AllowExecutionFromCloudWatch"
     action        = "lambda:InvokeFunction"
-    function_name = aws_lambda_function.holoscope.function_name
+    function_name = aws_lambda_function.holoscope_public.function_name
     principal     = "events.amazonaws.com"
-    source_arn    = aws_cloudwatch_event_rule.holoscope_event_rule.arn
+    source_arn    = aws_cloudwatch_event_rule.holoscope_public_event_rule.arn
 }
 
 # Role
