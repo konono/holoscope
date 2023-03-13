@@ -59,7 +59,7 @@ class Importer(object):
         programs = []
         thumbnail_hash = {}
         youtube_utils = YoutubeUtils(self.youtube)
-        all_programs = self._get_programs(youtube_utils)
+        all_programs = self._get_programs()
         for program in all_programs:
             thumbnail_hash[program.get('actor')] = {'holodule_url': program.get('img')}
         thumbnail_cache_manager = ThumbnailCacheManager(self.cnf, self.youtube, thumbnail_hash)
@@ -71,19 +71,13 @@ class Importer(object):
                     program['collaborate'] = []
                     programs.append(program)
                     break
+                # キャッシュに入ってる推しのサムネイルのURLとコラボレーターの中に入っていたサムネイルのURLが一致したらコラボ配信と判定
                 if thumbnail_cache[i].get('holodule_url') in program['collaborators']:
                     program['collaborate'].append(i)
                     programs.append(program)
-                # else:
-                #     for collaborator in program['collaborators']:
-                #         img_read = urllib.request.urlopen(collaborator).read()
-                #         img_bin = io.BytesIO(img_read)
-                #         img_hash = imagehash.average_hash(Image.open(img_bin))
-                #         if (imagehash.hex_to_hash(thumbnail_cache[i]['youtube_img_hash']) - img_hash) < 4:
-                #             program['collaborate'] = i
-                #             programs.append(program)
         # 同一のprogramがlist内にあった場合削除
         programs = list(map(json.loads, set(map(json.dumps, programs))))
+        log.debug(f'Contents filtered by favorite: {programs}')
         video_ids = [program.get('video_id') for program in programs]
         if len(video_ids) > 50:
             i = 0
@@ -117,7 +111,7 @@ class Importer(object):
                          f'{events[-1].title}.')
         return self._deduplicate_live_events(events)
 
-    def _get_programs(self, youtube_utils) -> list:
+    def _get_programs(self) -> list:
         programs = []
         r = requests.get(self.cnf.holodule.holodule_url, timeout=(3.0, 7.5))
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -148,4 +142,5 @@ class Importer(object):
                       'img': s_img,
                       'collaborate': []}
             programs.append(result)
+            log.debug(f'Get contents from holodule: {result}')
         return programs
