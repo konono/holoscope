@@ -111,8 +111,6 @@ class Exporter(object):
             else:
                 start_dateTime = live_event.scheduled_start_time.format(ISO861FORMAT) + 'Z'
                 end_dateTime = live_event.scheduled_start_time.shift(hours=+1).format(ISO861FORMAT) + 'Z'
-                if live_event.actual_end_time and self.actual_end_time:
-                    end_dateTime = live_event.actual_end_time.format(ISO861FORMAT) + 'Z'
             body = {
                 # 予定のタイトル
                 'summary': f'{title_str}',
@@ -146,32 +144,30 @@ class Exporter(object):
             }
             if (event := [event for event in self.events if live_event.id == event.video_id]):
                 event = event[0]
-                if title_str == event.title:
-                    if live_event.actual_start_time:
-                        if live_event.actual_start_time.to('Asia/Tokyo') == event.start_time:
-                            if live_event.actual_end_time and self.actual_end_time:
-                                if live_event.actual_end_time.to('Asia/Tokyo') == event.end_time:
-                                    log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                             'is already scheduled.')
-                                    continue
-                            else:
-                                log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                         'is already scheduled.')
-                                continue
-                    else:
-                        if live_event.scheduled_start_time.to('Asia/Tokyo') == event.start_time:
-                            if live_event.actual_end_time and self.actual_end_time:
-                                if live_event.actual_end_time.to('Asia/Tokyo') == event.end_time:
-                                    log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                             'is already scheduled.')
-                                    continue
-                            else:
-                                log.info(f'[{live_event.id}]: {live_event.title} ' +
-                                         'is already scheduled.')
-                                continue
-                self._update_event(event.id, live_event)
-                log.info(f'[{live_event.id}]: Update the scheduled {live_event.title}.')
+                if title_str != event.title:
+                    self._update_event(event.id, live_event)
+                    log.info(f'[{live_event.id}]: Update the title of the scheduled {live_event.title}.')
+                    continue
+                if live_event.actual_start_time:
+                    if live_event.actual_start_time.to('Asia/Tokyo') != event.start_time:
+                        self._update_event(event.id, live_event)
+                        log.info(f'[{live_event.id}]: Update the start time to the actual time ' +
+                                 f'from the scheduled {live_event.title}.')
+                        continue
+                elif live_event.scheduled_start_time.to('Asia/Tokyo') != event.start_time:
+                    self._update_event(event.id, live_event)
+                    log.info(f'[{live_event.id}]: Update the start time ' +
+                             f'of the scheduled{live_event.title}.')
+                    continue
+                if live_event.actual_end_time:
+                    if live_event.actual_end_time.to('Asia/Tokyo') != event.end_time:
+                        self._update_event(event.id, live_event)
+                        log.info(f'[{live_event.id}]: Add the actual end time to ' +
+                                 f'the scheduled {live_event.title}.')
+                        continue
+                log.info(f'[{live_event.id}]: {live_event.title} is already scheduled.')
             else:
+                # 2ヶ月以上将来の予定は予定に入れない
                 if live_event.scheduled_start_time > arrow.utcnow().shift(days=FUTURE):
                     log.info(f'[{live_event.id}]: {title_str} was not scheduled, ' +
                              f'because it is {FUTURE} days away.')
