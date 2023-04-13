@@ -66,24 +66,28 @@ class Importer(object):
         thumbnail_cache = thumbnail_cache_manager.get_thumbnail_cache()
         # 配信予定でループして、actorが一致したらbreak、コラボ予定であればcollaboratorsを追加
         for program in all_programs:
-            for i in self.cnf.holodule.holomenbers:
-                if i == program.get('actor'):
+            # for i in self.cnf.holodule.holomenbers:
+            for holomen in thumbnail_cache:
+                if program.get('actor') in self.cnf.holodule.holomenbers:
                     program['collaborate'] = []
                     programs.append(program)
                     break
                 # キャッシュに入ってる推しのサムネイルのURLとコラボレーターの中に入っていたサムネイルのURLが一致したらコラボ配信と判定
-                if thumbnail_cache[i].get('holodule_url') in program['collaborators']:
-                    program['collaborate'].append(i)
-                    programs.append(program)
+                if thumbnail_cache[holomen].get('holodule_url') in program['collaborators']:
+                    program['collaborate'].append(holomen)
+                if holomen in self.cnf.holodule.holomenbers:
+                    if holomen in program['collaborate']:
+                        programs.append(program)
         # 同一のprogramがlist内にあった場合削除
         programs = list(map(json.loads, set(map(json.dumps, programs))))
         log.debug(f'Contents filtered by favorite: {programs}')
         video_ids = [program.get('video_id') for program in programs]
+        log.debug(f'Contents filtered by favorite video_ids: {video_ids}')
         if len(video_ids) > 50:
             i = 0
             video_ids_list = [video_ids[:50], video_ids[50:]]
             for video_ids in video_ids_list:
-                responses = youtube_utils.get_live_event(video_ids)
+                responses = youtube_utils.get_live_events(video_ids)
                 log.debug('LIVE EVENT JSON DUMP')
                 log.debug(json.dumps(responses))
                 for resp in responses:
@@ -97,7 +101,7 @@ class Importer(object):
                              f'{events[-1].title}.')
                     i = i + 1
         else:
-            responses = youtube_utils.get_live_event(video_ids)
+            responses = youtube_utils.get_live_events(video_ids)
             log.debug('LIVE EVENT JSON DUMP')
             log.debug(json.dumps(responses))
             for j, resp in enumerate(responses):
