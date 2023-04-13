@@ -32,10 +32,12 @@ toml = "*"
 dacite = "*"
 boto3 = "*"
 beautifulsoup4 = "*"
+icalendar = "*"
 
 [dev-packages]
 pre-commit = "*"
 tox = "*"
+line-bot-sdk = "*"
 
 [requires]
 python_version = "3.10.6"
