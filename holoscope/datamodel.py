@@ -64,6 +64,12 @@ class GCalEvent():
     def __init__(self, data) -> None:
         self._data = data
 
+    def __repr__(self):
+        return self.id
+
+    def __str__(self):
+        return self.id
+
     @property
     def id(self) -> str:
         return self._data['id']
@@ -73,9 +79,28 @@ class GCalEvent():
         return self._data['summary']
 
     @property
-    def start_time(self) -> str:
-        start_time = self._data['start']['dateTime']
-        return arrow.get(start_time)
+    def start_dateTime(self) -> str:
+        start_dateTime = self._data['start']['dateTime']
+        return arrow.get(start_dateTime)
+
+    @property
+    def actual_start_time(self) -> str:
+        try:
+            actual_start_time = arrow.get(self._data['extendedProperties']['private']['actual_start_time'])
+        except KeyError:
+            actual_start_time = None
+        return actual_start_time
+
+    @property
+    def actual_end_time(self) -> str:
+        try:
+            actual_end_time = arrow.get(self._data['extendedProperties']['private']['actual_end_time'])
+        except KeyError:
+            actual_end_time = None
+        return actual_end_time
+
+        actual_end_time = self._data['extendedProperties']['private']['actual_end_time']
+        return arrow.get(actual_end_time)
 
     @property
     def scheduled_start_time(self) -> str:
@@ -83,9 +108,9 @@ class GCalEvent():
         return arrow.get(scheduled_start_time)
 
     @property
-    def end_time(self) -> str:
-        end_time = self._data['end']['dateTime']
-        return arrow.get(end_time)
+    def end_dateTime(self) -> str:
+        end_dateTime = self._data['end']['dateTime']
+        return arrow.get(end_dateTime)
 
     @property
     def link(self) -> str:
@@ -117,7 +142,15 @@ class GCalEvent():
 
     @property
     def collaborate(self) -> str:
-        return self._data['extendedProperties']['private']['collaborate']
+        try:
+            collaborate = self._data['extendedProperties']['private']['collaborate']
+        except KeyError:
+            collaborate = None
+        return collaborate
+
+    @property
+    def extendedProperties(self) -> dict:
+        return self._data["extendedProperties"]["private"]
 
 
 @dataclass
@@ -125,6 +158,7 @@ class AwsConfiguration:
     kms_key_id: Optional[str] = None
     access_key_id: Optional[str] = None
     secret_access_key: Optional[str] = None
+    s3_bucket: Optional[str] = None
     dynamodb_table: Optional[str] = 'holoscope'
     dynamodb_hash_key_name: Optional[str] = 'hashKey'
 
@@ -157,9 +191,15 @@ class YoutubeConfiguration:
 
 
 @dataclass
+class LineConfiguration:
+    line_channel_access_token: str
+
+
+@dataclass
 class Configuration:
     aws: Optional[AwsConfiguration] = None
     general: Optional[GeneralConfiguration] = None
     holodule: Optional[HoloduleConfiguration] = None
     google_calendar: Optional[GoogleCalendarConfiguration] = None
     youtube: Optional[YoutubeConfiguration] = None
+    line: Optional[LineConfiguration] = None
